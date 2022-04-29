@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
 const port = process.env.PORT || 5000;
 
@@ -23,11 +23,22 @@ async function run() {
     try {
         await client.connect()
         const bookCollection = client.db('bookHut').collection('books');
+
+        // get data 
+        // all data --------------
         app.get('/books', async (req, res) => {
             const query = {};
             const cursor = bookCollection.find(query)
             const result = await cursor.toArray()
             res.send(result)
+        })
+        // one data by Id------------ 
+        app.get('/inventory/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await bookCollection.findOne(query)
+            res.send(result)
+            // console.log(id)
         })
     } finally {
 

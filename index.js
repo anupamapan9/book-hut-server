@@ -24,7 +24,7 @@ async function run() {
         await client.connect()
         const bookCollection = client.db('bookHut').collection('books');
 
-        // get data 
+        // get data **************
         // all data --------------
         app.get('/books', async (req, res) => {
             const query = {};
@@ -38,7 +38,17 @@ async function run() {
             const query = { _id: ObjectId(id) }
             const result = await bookCollection.findOne(query)
             res.send(result)
-            // console.log(id)
+        })
+        // get data end *********************
+
+
+
+        // post & update data 
+
+        app.post('/books', async (req, res) => {
+            const book = req.body;
+            const result = await bookCollection.insertOne(book)
+            res.send(result)
         })
     } finally {
 

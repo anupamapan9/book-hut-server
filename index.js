@@ -43,16 +43,28 @@ async function run() {
 
 
 
-        // post & update data 
-
+        // post & update data **********************
+        // post data ----------------------
         app.post('/books', async (req, res) => {
             const book = req.body;
             const result = await bookCollection.insertOne(book)
             res.send(result)
         })
-
-
-        // delete a data by id 
+        // update ---------------------
+        app.put('/update/:id', async (req, res) => {
+            const id = req.params;
+            const updatedQuantity = req.body;
+            const filter = { _id: ObjectId(id) }
+            const options = { upsert: true }
+            const updatedDoc = {
+                $set: {
+                    quantity: updatedQuantity.newQuantityTotal
+                }
+            }
+            const result = await bookCollection.updateOne(filter, updatedDoc, options)
+            res.send(result)
+        })
+        // delete a data by id ------------------------
         app.delete('/books/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) }
@@ -65,14 +77,6 @@ async function run() {
 }
 
 run().catch(console.dir)
-
-
-
-
-
-
-
-
 
 
 

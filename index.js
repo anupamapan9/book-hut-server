@@ -24,11 +24,11 @@ function verifyJWT(req, res, next) {
         if (err) {
             return res.status(403).send({ message: "Forbidden Access" })
         }
-        console.log('decoded', decoded)
         req.decoded = decoded;
+        next()
     })
 
-    next()
+
 }
 
 
